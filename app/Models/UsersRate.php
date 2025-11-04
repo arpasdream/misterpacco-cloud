@@ -17,6 +17,12 @@ class UsersRate extends Model
 
     public $timestamps = true;
 
+    protected $casts = [
+        'min_peso' => 'decimal:2',
+        'max_peso' => 'decimal:2',
+        'prezzo'   => 'decimal:2',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\UsersRateController;
 
 Route::middleware(['auth'])->group(function () {
     // LISTA
@@ -20,4 +21,13 @@ Route::middleware(['auth'])->group(function () {
 
     // DETTAGLI CLIENTE
     Route::get('/clienti/{customer}/dettagli', [CustomerController::class, 'show'])->name('dettagli-cliente');
+
+    // ================== TARIFFE CLIENTI ==================
+
+    Route::get('/clienti/{customer}/tariffe', [UsersRateController::class, 'index'])->name('lista-tariffe');
+    Route::get('/clienti/{customer}/tariffe/nuova', [UsersRateController::class, 'create'])->name('inserisci-tariffa');
+    Route::post('/clienti/{customer}/tariffe', [UsersRateController::class, 'store'])->name('tariffa.store');
+    Route::get('/clienti/{customer}/tariffe/{rate}/edit', [UsersRateController::class, 'edit'])->name('modifica-tariffa');
+    Route::put('/clienti/{customer}/tariffe/{rate}', [UsersRateController::class, 'update'])->name('tariffa.update');
+    Route::delete('/clienti/{customer}/tariffe/{rate}', [UsersRateController::class, 'destroy'])->name('tariffa.destroy');
 });

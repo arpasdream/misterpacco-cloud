@@ -10,18 +10,24 @@ use Illuminate\Validation\Rule;
 class CustomerController extends Controller
 {
     /** Lista + filtro SOLO per ragione_sociale */
-    public function index(Request $r)
+    public function index(Request $request)
     {
-        $s = $r->get('s');
+        $s = trim((string)$request->get('s', ''));
 
         $clienti = Customer::query()
             ->when($s, fn($q) => $q->where('ragione_sociale', 'like', "%{$s}%"))
-            ->orderByDesc('id')
+            ->orderBy('id', 'desc')
             ->paginate(20)
             ->withQueryString();
 
-        // NB: questa view è la tua index (non la includo qui perché chiedi rotte+controller+form)
-        return view('clienti.index', compact('clienti','s'));
+        $ragioni = Customer::whereNotNull('ragione_sociale')
+            ->where('ragione_sociale','<>','')
+            ->orderBy('ragione_sociale')
+            ->limit(500) // limite di sicurezza
+            ->pluck('ragione_sociale')
+            ->toArray();
+
+        return view('clienti.index', compact('clienti','s','ragioni'));
     }
 
     /** Unica view per create/edit — passa $c = null (create) */

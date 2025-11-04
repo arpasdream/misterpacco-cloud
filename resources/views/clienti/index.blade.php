@@ -23,24 +23,37 @@
 
                 <div class="card-body table-border-style">
                     {{-- FILTRI --}}
-                    <form method="get" class="filter-bar mb-3">
-                        <div class="row g-2 align-items-end">
+                    <form method="get" action="{{ route('lista-clienti') }}" class="mb-4">
+                        <div class="row g-3 align-items-end">
+
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Cerca per ragione sociale</label>
-                                <input type="text" name="s" value="{{ $s }}" class="form-control form-control-sm"
-                                       placeholder="Inserisci ragione sociale...">
+                                <label for="s" class="form-label mb-1">Cerca per ragione sociale</label>
+                                <input type="text"
+                                       name="s"
+                                       id="s"
+                                       class="form-control form-control-sm"
+                                       value="{{ old('s', $s) }}"
+                                       placeholder="Digita il nome..."
+                                       list="ragioni-list">
+                                <datalist id="ragioni-list">
+                                    @foreach($ragioni as $r)
+                                        <option value="{{ $r }}"></option>
+                                    @endforeach
+                                </datalist>
                             </div>
-                            <div class="col-12 col-md-6 text-md-end">
-                                <label class="form-label d-none d-md-block">&nbsp;</label>
-                                <div class="d-flex gap-2 justify-content-md-end">
-                                    @if($s)
-                                        <a href="{{ route('lista-clienti') }}" class="btn btn-outline-secondary btn-sm">Reset</a>
-                                    @endif
-                                    <button class="btn btn-primary btn-sm" type="submit">Filtra</button>
-                                </div>
+
+                            <div class="col-12 col-md-3 d-flex gap-2">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa fa-search me-1"></i> Filtra
+                                </button>
+                                @if($s)
+                                    <a href="{{ route('lista-clienti') }}" class="btn btn-sm btn-outline-secondary">Reset</a>
+                                @endif
                             </div>
+
                         </div>
                     </form>
+
 
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-vcenter">
@@ -116,6 +129,12 @@
                                                class="btn btn-sm btn-alt-primary" data-toggle="tooltip" title="Modifica">
                                                 <i class="fa fa-fw fa-pencil-alt"></i>
                                             </a>
+
+                                            <a href="{{ route('lista-tariffe', $c->id) }}"
+                                               class="btn btn-sm btn-alt-info" data-toggle="tooltip" title="Tariffe">
+                                                <i class="fa fa-fw fa-tags"></i>
+                                            </a>
+
                                             <form action="{{ route('cliente.destroy', $c->id) }}" method="post"
                                                   onsubmit="return confirm('Eliminare questo cliente?')">
                                                 @csrf @method('DELETE')
@@ -140,5 +159,4 @@
             </div>
         </div>
     </div>
-
 @endsection
